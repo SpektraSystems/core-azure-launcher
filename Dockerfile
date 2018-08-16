@@ -6,4 +6,6 @@ RUN sudo sh -c 'echo -e "[azure-cli]\nname=Azure CLI\nbaseurl=https://packages.m
 RUN sudo yum install azure-cli -y
 
 RUN az aks install-cli
+RUN mkdir /tmp/cje
 RUN wget https://raw.githubusercontent.com/SpektraSystems/core-azure-launcher/master/deploy.sh
+cp deploy.sh /tmp/cje/deploy.sh
