@@ -64,7 +64,7 @@ metadata:
 data:
   location.groovy: |
     hudson.ExtensionList.lookupSingleton(com.cloudbees.jenkins.support.impl.cloudbees.TcpSlaveAgentListenerMonitor.class).disable(true)
-    jenkins.model.JenkinsLocationConfiguration.get().setUrl("https://127.0.0.1.xip.io/cjoc");
+    jenkins.model.JenkinsLocationConfiguration.get().setUrl("https://cje.example.com/cjoc");
 
 ---
 apiVersion: "apps/v1beta1"
