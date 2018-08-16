@@ -8,4 +8,4 @@ RUN sudo yum install azure-cli -y
 RUN az aks install-cli
 RUN mkdir /tmp/cje
 RUN wget https://raw.githubusercontent.com/SpektraSystems/core-azure-launcher/master/bootstrap.sh
-RUN cp deploy.sh /tmp/cje/deploy.sh
+RUN cp bootstrap.sh /tmp/cje/bootstrap.sh
