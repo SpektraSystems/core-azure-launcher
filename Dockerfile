@@ -1,5 +1,9 @@
 FROM ubuntu
 
+ENV AZURE_CLI_VERSION "0.10.13"
+ENV NODEJS_APT_ROOT "node_6.x"
+ENV NODEJS_VERSION "6.10.0"
+
 RUN apt-get update
 RUN apt-get install -y git
 RUN apt-get -y install curl
