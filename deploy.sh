@@ -23,7 +23,7 @@ function prep_deployment
 {
     az login --service-principal -u $spnappid -p $spnapppassword --tenant $spntenantid
     az aks get-credentials -g $rgname -n $k8name
-    DOMAIN_NAME=`az aks show --resource-group Cloudbees-dev --name amit5 --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName`
+    DOMAIN_NAME=`az aks show --resource-group $rgname --name $k8name --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName`
     HOSTNAME=`echo $DOMAIN_NAME | sed "s/\"//g"`
     CJEHOSTNAME="$cjedns.$HOSTNAME"
 
