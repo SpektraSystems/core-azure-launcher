@@ -1,0 +1,15 @@
+FROM microsoft/azure-cli
+
+#install git
+
+RUN apt-get update
+RUN apt-get install -y git
+
+# Install curl
+RUN apt-get -y install curl
+
+# Install openssl
+RUN apt-get -y install openssl
+
+#Install kubectl
+RUN curl -L https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
