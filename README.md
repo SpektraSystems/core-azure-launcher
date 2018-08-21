@@ -30,5 +30,7 @@ kubectl exec cjoc-0 -- cat /var/jenkins_home/secrets/initialAdminPassword
  kubectl get ingress
 
 
-You can now use CJOC for further deployment and operations.
+You can now use CJOC for further deployment and operations. See Administering CloudBees Jenkins Enterprise for further information.https://go.cloudbees.com/docs/cloudbees-documentation/cje-v2-admin-guide/
+
+
  
