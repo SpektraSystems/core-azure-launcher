@@ -11,13 +11,7 @@
 		"dnsPrefix": {
 			"type": "String",
 			"metadata": {
-				"description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
-			}
-		},
-		"cjocDNSPrefix": {
-			"type": "String",
-			"metadata": {
-				"description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
+				"description": "DNS prefix to use with hosted Kubernetes API server FQDN."
 			}
 		},
 		"aksAgentCount": {
@@ -235,7 +229,7 @@
 									"[variables('tenantid')]",
 									"[resourceGroup().name]",
 									"[parameters('aksClusterName')]",
-									"[parameters('dnsname')]"
+									"cjoc"
                                 ]
                             }
                         }
