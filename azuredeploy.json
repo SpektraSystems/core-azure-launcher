@@ -1,244 +1,218 @@
-{
-	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-	"contentVersion": "1.0.0.0",
-	"parameters": {
-		"aksClusterName": {
-			"type": "String",
-			"metadata": {
-				"description": "The name of the Managed Cluster resource."
-			}
-		},
-		"dnsPrefix": {
-			"type": "String",
-			"metadata": {
-				"description": "DNS prefix to use with hosted Kubernetes API server FQDN."
-			}
-		},
-		"aksAgentCount": {
-			"defaultValue": 3,
-			"minValue": 1,
-			"maxValue": 50,
-			"type": "Int",
-			"metadata": {
-				"description": "The number of nodes for the cluster."
-			}
-		},
-		"agentVMSize": {
-			"defaultValue": "Standard_D2_v2",
-			"allowedValues": [
-				"Standard_A10",
-				"Standard_A11",
-				"Standard_A2",
-				"Standard_A2_v2",
-				"Standard_A2m_v2",
-				"Standard_A3",
-				"Standard_A4",
-				"Standard_A4_v2",
-				"Standard_A4m_v2",
-				"Standard_A5",
-				"Standard_A6",
-				"Standard_A7",
-				"Standard_A8",
-				"Standard_A8_v2",
-				"Standard_A8m_v2",
-				"Standard_A9",
-				"Standard_D11",
-				"Standard_D11_v2",
-				"Standard_D12",
-				"Standard_D12_v2",
-				"Standard_D13",
-				"Standard_D13_v2",
-				"Standard_D14",
-				"Standard_D14_v2",
-				"Standard_D15_v2",
-				"Standard_D2",
-				"Standard_D2_v2",
-				"Standard_D3",
-				"Standard_D3_v2",
-				"Standard_D4",
-				"Standard_D4_v2",
-				"Standard_D5_v2",
-				"Standard_DS11",
-				"Standard_DS11_v2",
-				"Standard_DS12",
-				"Standard_DS12_v2",
-				"Standard_DS13",
-				"Standard_DS13_v2",
-				"Standard_DS14",
-				"Standard_DS14_v2",
-				"Standard_DS15_v2",
-				"Standard_DS2",
-				"Standard_DS2_v2",
-				"Standard_DS3",
-				"Standard_DS3_v2",
-				"Standard_DS4",
-				"Standard_DS4_v2",
-				"Standard_DS5_v2",
-				"Standard_F16",
-				"Standard_F16s",
-				"Standard_F2",
-				"Standard_F2s",
-				"Standard_F4",
-				"Standard_F4s",
-				"Standard_F8",
-				"Standard_F8s",
-				"Standard_G1",
-				"Standard_G2",
-				"Standard_NC6",
-				"Standard_NC12",
-				"Standard_NC24",
-				"Standard_NC24r",
-				"Standard_NV6",
-				"Standard_NV12",
-				"Standard_NV24",
-				"Standard_B1s",
-				"Standard_B1ms",
-				"Standard_B2s",
-				"Standard_B2ms",
-				"Standard_B4ms",
-				"Standard_B8ms"
-			],
-			"type": "String",
-			"metadata": {
-				"description": "The size of the Virtual Machine."
-			}
-        },
-        "sshRSAPublicKey": {
-            "type": "string",
-            "metadata": {
-                "description": "Configure all linux machines with the SSH RSA public key string. Your key should include three parts, for example 'ssh-rsa AAAAB...snip...UcyupgH azureuser@linuxvm'"
+    {
+        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+        "contentVersion": "1.0.0.0",
+        "parameters": {
+            "aksClusterName": {
+                "type": "String",
+                "metadata": {
+                    "description": "The name of the Managed Cluster resource."
+                }
+            },
+            "dnsPrefix": {
+                "type": "String",
+                "metadata": {
+                    "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
+                }
+            },
+            "aksAgentCount": {
+                "defaultValue": 3,
+                "minValue": 1,
+                "maxValue": 50,
+                "type": "Int",
+                "metadata": {
+                    "description": "The number of nodes for the cluster."
+                }
+            },
+            "agentVMSize": {
+                "defaultValue": "Standard_DS2_v2",
+                "allowedValues": [
+                    "Standard_DS11",
+                    "Standard_DS11_v2",
+                    "Standard_DS12",
+                    "Standard_DS12_v2",
+                    "Standard_DS13",
+                    "Standard_DS13_v2",
+                    "Standard_DS14",
+                    "Standard_DS14_v2",
+                    "Standard_DS15_v2",
+                    "Standard_DS2",
+                    "Standard_DS2_v2",
+                    "Standard_DS3",
+                    "Standard_DS3_v2",
+                    "Standard_DS4",
+                    "Standard_DS4_v2",
+                    "Standard_DS5_v2",
+                    "Standard_F16",
+                    "Standard_F16s",
+                    "Standard_F2",
+                    "Standard_F2s",
+                    "Standard_F4",
+                    "Standard_F4s",
+                    "Standard_F8",
+                    "Standard_F8s",
+                    "Standard_G1",
+                    "Standard_G2",
+                    "Standard_NC6",
+                    "Standard_NC12",
+                    "Standard_NC24",
+                    "Standard_NC24r",
+                    "Standard_NV6",
+                    "Standard_NV12",
+                    "Standard_NV24",
+                    "Standard_B1s",
+                    "Standard_B1ms",
+                    "Standard_B2s",
+                    "Standard_B2ms",
+                    "Standard_B4ms",
+                    "Standard_B8ms"
+                ],
+                "type": "String",
+                "metadata": {
+                    "description": "The size of the Virtual Machine."
+                }
+            },
+            "sshRSAPublicKey": {
+                "type": "string",
+                "metadata": {
+                    "description": "Configure all linux machines with the SSH RSA public key string. Your key should include three parts, for example 'ssh-rsa AAAAB...snip...UcyupgH azureuser@linuxvm'"
+                }
+            },
+            "servicePrincipalClientId": {
+                "defaultValue": "n/a",
+                "type": "SecureString",
+                "metadata": {
+                    "description": "Client ID (used by cloudprovider)"
+                }
+            },
+            "servicePrincipalClientSecret": {
+                "defaultValue": "n/a",
+                "type": "SecureString",
+                "metadata": {
+                    "description": "The Service Principal Client Secret."
+                }
+            },
+            "kubernetesVersion": {
+                "defaultValue": "1.8.7",
+                "allowedValues": [
+                    "1.8.7",
+                    "1.7.12"
+                ],
+                "type": "String",
+                "metadata": {
+                    "description": "The version of Kubernetes."
+                }
             }
         },
-		"servicePrincipalClientId": {
-			"defaultValue": "n/a",
-			"type": "SecureString",
-			"metadata": {
-				"description": "Client ID (used by cloudprovider)"
-			}
-		},
-		"servicePrincipalClientSecret": {
-			"defaultValue": "n/a",
-			"type": "SecureString",
-			"metadata": {
-				"description": "The Service Principal Client Secret."
-			}
-		},
-		"kubernetesVersion": {
-			"defaultValue": "1.8.7",
-			"allowedValues": [
-				"1.8.7",
-				"1.7.12"
-			],
-			"type": "String",
-			"metadata": {
-				"description": "The version of Kubernetes."
-			}
-        }
-	},
-	"variables": {
-        "linuxAdminUsername": "azureuser",
-        "enableHttpApplicationRouting": true,
-        "TFRPlocation": "westcentralus",
-        "osType": "Linux",
-        "osDiskSizeGB": 50,
-		"aksClusterName": "[parameters('aksClusterName')]",
-		"agentVMSize": "[parameters('agentVMSize')]",
-		"dnsPrefix": "[parameters('dnsPrefix')]",
-		"servicePrincipalClientId": "[parameters('servicePrincipalClientId')]",
-		"servicePrincipalClientSecret": "[parameters('servicePrincipalClientSecret')]",
-        "kubernetesVersion": "[parameters('kubernetesVersion')]",
-        "tenantid": "[subscription().tenantId]"
-	},
-	"resources": [{
-			"type": "Microsoft.ContainerService/managedClusters",
-			"name": "[variables('aksClusterName')]",
-			"apiVersion": "2017-08-31",
-			"location": "[resourceGroup().location]",
-			"properties": {
-				"kubernetesVersion": "[variables('kubernetesVersion')]",
-                "dnsPrefix": "[variables('dnsPrefix')]",
-                "addonProfiles": {
-                "httpApplicationRouting": {
-                    "enabled": "[variables('enableHttpApplicationRouting')]"
+        "variables": {
+            "linuxAdminUsername": "azureuser",
+            "enableHttpApplicationRouting": true,
+            "enableRBAC": false,
+            "networkPlugin": "kubenet",
+            "TFRPlocation": "westcentralus",
+            "osType": "Linux",
+            "osDiskSizeGB": 50,
+            "aksClusterName": "[parameters('aksClusterName')]",
+            "agentVMSize": "[parameters('agentVMSize')]",
+            "dnsPrefix": "[parameters('dnsPrefix')]",
+            "servicePrincipalClientId": "[parameters('servicePrincipalClientId')]",
+            "servicePrincipalClientSecret": "[parameters('servicePrincipalClientSecret')]",
+            "kubernetesVersion": "[parameters('kubernetesVersion')]",
+            "tenantid": "[subscription().tenantId]"
+        },
+        "resources": [{
+                "type": "Microsoft.ContainerService/managedClusters",
+                "name": "[variables('aksClusterName')]",
+                "apiVersion": "2017-08-31",
+                "location": "[resourceGroup().location]",
+                "properties": {
+                    "kubernetesVersion": "[variables('kubernetesVersion')]",
+                    "enableRBAC": "[variables('enableRBAC')]",
+                    "dnsPrefix": "[variables('dnsPrefix')]",
+                    "addonProfiles": {
+                    "httpApplicationRouting": {
+                        "enabled": "[variables('enableHttpApplicationRouting')]"
+                    }
+                    },
+                    "agentPoolProfiles": [{
+                        "name": "agentpool",
+                        "osDiskSizeGB": "[variables('osDiskSizeGB')]",
+                        "count": "[parameters('aksAgentCount')]",
+                        "vmSize": "[variables('agentVMSize')]",
+                        "osType": "[variables('osType')]",
+                        "storageProfile": "ManagedDisks"
+                    }],
+                    "linuxProfile": {
+                        "adminUsername": "[variables('linuxAdminUsername')]",
+                        "ssh": {
+                            "publicKeys": [
+                                {
+                                    "keyData": "[parameters('sshRSAPublicKey')]"
+                                }
+                            ]
+                        }
+                    },
+                    "servicePrincipalProfile": {
+                        "ClientId": "[parameters('servicePrincipalClientId')]",
+                        "Secret": "[parameters('servicePrincipalClientSecret')]"
+                    },
+                    "networkProfile": {
+                        "networkPlugin": "[variables('networkPlugin')]"
+                    }
                 }
+            },
+            {
+                "type": "Microsoft.TerraformOSS/providerregistrations",
+                "name": "[parameters('aksClusterName')]",
+                "apiVersion": "2018-05-01-preview",
+                "location": "[variables('TFRPlocation')]",
+                "properties": {
+                    "providertype": "kubernetes",
+                    "settings": {
+                        "inline_config": "[Base64ToString(ListCredential(resourceId('Microsoft.ContainerService/managedClusters/accessProfiles', parameters('aksClusterName'),'clusterAdmin'), '2017-08-31').properties.kubeConfig)]"
+                    }
                 },
-				"agentPoolProfiles": [{
-					"name": "agentpool",
-					"osDiskSizeGB": "[variables('osDiskSizeGB')]",
-					"count": "[parameters('aksAgentCount')]",
-					"vmSize": "[variables('agentVMSize')]",
-					"osType": "[variables('osType')]",
-					"storageProfile": "ManagedDisks"
-				}],
-				"linuxProfile": {
-                    "adminUsername": "[variables('linuxAdminUsername')]",
-                    "ssh": {
-                        "publicKeys": [
+                "dependsOn": [
+                    "[resourceId('Microsoft.ContainerService/managedClusters', parameters('aksClusterName'))]"
+                ]
+            },
+            {
+                "type": "Microsoft.TerraformOSS/resources",
+                "name": "bootstrappod",
+                "apiVersion": "2018-05-01-preview",
+                "location": "[variables('TFRPlocation')]",
+                "properties": {
+                    "providerId": "[resourceId('Microsoft.TerraformOSS/providerregistrations', parameters('aksClusterName'))]",
+                    "resourcetype": "kubernetes_pod",
+                    "settings": {
+                        "metadata": [
                             {
-                                "keyData": "[parameters('sshRSAPublicKey')]"
+                                "name": "corebootstrap",
+                                "labels": {
+                                    "App": "corebootstrap"
+                                }
+                            }
+                        ],
+                        "spec": [
+                            {
+                                "container": {
+                                    "image": "amitmalik/corebootstrap:latest",
+                                    "name": "corebootstrap",
+                                    "args": [
+                                        "[parameters('servicePrincipalClientId')]",
+                                        "[parameters('servicePrincipalClientSecret')]",
+                                        "[variables('tenantid')]",
+                                        "[resourceGroup().name]",
+                                        "[parameters('aksClusterName')]",
+                                        "cjoc"
+                                    ]
+                                }
                             }
                         ]
                     }
-				},
-				"servicePrincipalProfile": {
-					"ClientId": "[parameters('servicePrincipalClientId')]",
-					"Secret": "[parameters('servicePrincipalClientSecret')]"
-				}
-			}
-		},
-		{
-			"type": "Microsoft.TerraformOSS/providerregistrations",
-			"name": "[parameters('aksClusterName')]",
-			"apiVersion": "2018-05-01-preview",
-			"location": "[variables('TFRPlocation')]",
-			"properties": {
-				"providertype": "kubernetes",
-				"settings": {
-					"inline_config": "[Base64ToString(ListCredential(resourceId('Microsoft.ContainerService/managedClusters/accessProfiles', parameters('aksClusterName'),'clusterAdmin'), '2017-08-31').properties.kubeConfig)]"
-				}
-			},
-			"dependsOn": [
-				"[resourceId('Microsoft.ContainerService/managedClusters', parameters('aksClusterName'))]"
-			]
-        },
-        {
-            "type": "Microsoft.TerraformOSS/resources",
-            "name": "bootstrappod",
-            "apiVersion": "2018-05-01-preview",
-            "location": "[variables('TFRPlocation')]",
-            "properties": {
-                "providerId": "[resourceId('Microsoft.TerraformOSS/providerregistrations', parameters('aksClusterName'))]",
-                "resourcetype": "kubernetes_pod",
-                "settings": {
-                    "metadata": [
-                        {
-                            "name": "corebootstrap",
-                            "labels": {
-                                "App": "corebootstrap"
-                            }
-                        }
-                    ],
-                    "spec": [
-                        {
-                            "container": {
-                                "image": "amitmalik/corebootstrap:latest",
-                                "name": "corebootstrap",
-                                "args": [
-									"[parameters('servicePrincipalClientId')]",
-									"[parameters('servicePrincipalClientSecret')]",
-									"[variables('tenantid')]",
-									"[resourceGroup().name]",
-									"[parameters('aksClusterName')]",
-									"cjoc"
-                                ]
-                            }
-                        }
-                    ]
-                }
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.TerraformOSS/providerregistrations', parameters('aksClusterName'))]"
-            ]
-        }
-    ]
-}
+                },
+                "dependsOn": [
+                    "[resourceId('Microsoft.TerraformOSS/providerregistrations', parameters('aksClusterName'))]"
+                ]
+            }
+        ]
+    }
