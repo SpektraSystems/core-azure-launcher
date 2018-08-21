@@ -9,4 +9,7 @@ RUN export PATH=~/tmp/cje:$PATH
 RUN az aks install-cli
 RUN mkdir /tmp/cje
 RUN wget https://raw.githubusercontent.com/SpektraSystems/core-azure-launcher/master/bootstrap.sh
+RUN chmod +x bootstrap.sh
 RUN cp bootstrap.sh /tmp/cje/bootstrap.sh
+RUN chmod +x bootstrap.sh
+ENTRYPOINT ["./bootstrap.sh"]
