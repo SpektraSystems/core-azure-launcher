@@ -90,14 +90,7 @@
                 "metadata": {
                     "description": "The Service Principal Client Secret."
                 }
-            },      
-        "enableHttpApplicationRouting": {
-            "type": "bool",
-            "defaultValue": true,
-            "metadata": {
-                "description": "boolean flag to turn on and off of http application routing"
-            }
-        },
+            }, 
             "kubernetesVersion": {
                 "defaultValue": "1.11.2",
                 "allowedValues": [
@@ -138,7 +131,7 @@
                     "dnsPrefix": "[variables('dnsPrefix')]",
                     "addonProfiles": {
                     "httpApplicationRouting": {
-                        "enabled": "[parameters('enableHttpApplicationRouting')]"
+                        "enabled": "[variables('enableHttpApplicationRouting')]"
                     }
                 },
                     "agentPoolProfiles": [{
