@@ -38,7 +38,7 @@ kubectl rollout status sts cjoc
 
 function clean_up
 {
-kubectl delete corebootstrap
+kubectl delete pods corebootstrap
 }
 
 prep_deployment
