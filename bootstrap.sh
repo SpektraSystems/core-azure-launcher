@@ -36,5 +36,12 @@ kubectl apply -f cje.yml
 kubectl rollout status sts cjoc
 }
 
+function clean_up
+{
+kubectl delete pods corebootstrap
+}
+
 prep_deployment
 deploy_cje
+sleep 120
+clean_up
