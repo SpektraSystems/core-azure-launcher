@@ -23,7 +23,7 @@ function deploy_ingress
 {
     az login --service-principal -u $spnappid -p $spnapppassword --tenant $spntenantid
     az aks get-credentials -g $rgname -n $k8name
-    kubectl delete -f https://raw.githubusercontent.com/SpektraSystems/core-azure-launcher/master/manifest/ingress-mandatory.yaml
+    kubectl apply -f https://raw.githubusercontent.com/SpektraSystems/core-azure-launcher/master/manifest/ingress-mandatory.yaml
     kubectl apply -f https://raw.githubusercontent.com/SpektraSystems/core-azure-launcher/master/manifest/ingress-cloud-generic.yaml
  while [[ "$(kubectl get svc ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')" = '' ]]; do sleep 3; done
     INGRESS_IP=$(kubectl get svc ingress-nginx  -o jsonpath='{.status.loadBalancer.ingress[0].ip}' | sed 's/"//g')
@@ -47,7 +47,7 @@ function create_cert
   openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
   echo "Created server.crt (self-signed)"
 
-  kubectl create secret tls cjoc-tls --cert=server.crt --key=server.key
+  kubectl create secret cjoc-tls --cert=server.crt --key=server.key
 }
 
 
