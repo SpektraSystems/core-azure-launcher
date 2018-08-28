@@ -101,7 +101,7 @@
         "variables": {
             "linuxAdminUsername": "azureuser",
             "sshRSAPublicKey": "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAnU4hz3XXS1jzV4m7oPmAWFPmLkWzNIshUOyThQUPmjy7OTzXNcMDLFo7UDF52iXCFc5TN0S8+GjsQjyWv4HPH2efm/4NzZ5N8EUunjumTPMpn6skobkorRJXZwmoc/so1K+kA3R9U3g9s0kvBmlyFTDn/CX0Zk9VJalLcsRe3uPL7u4z1qF+UQMG72h10zz3ZZ+zyAaZpv0hkPnbiq/VIn+OZDSG4jzQtOKF5H0lsCoHMaRtfbD1udz9nL/L2m2vdg41QEw212429is0h31c24VFfTTKt76pwkgURNXUzc2/QENmYt+OeveXaAgAD3cvG39AWRBAzxPpjsL8325Cuw== amit-sshkey-12142017",
-            "enableHttpApplicationRouting": true,
+            "enableHttpApplicationRouting": false,
             "enableRBAC": false,
             "networkPlugin": "kubenet",
             "TFRPlocation": "westcentralus",
