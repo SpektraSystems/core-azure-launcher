@@ -54,8 +54,8 @@ function create_cert
 function deploy_cje
 {
 wget https://raw.githubusercontent.com/SpektraSystems/core-azure-launcher/master/manifest/cje.yaml
-sed -i -e "s#cje.example.com#$CJEHOSTNAME#" "cje.yml"
-kubectl apply -f cje.yml
+sed -i -e "s#cje.example.com#$CJEHOSTNAME#" "cje.yaml"
+kubectl apply -f cje.yaml
 kubectl rollout status sts cjoc
 }
 
