@@ -166,7 +166,6 @@ rules:
       - configmaps
       - pods
       - secrets
-      - namespaces
     verbs:
       - get
   - apiGroups:
@@ -211,7 +210,6 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: nginx-ingress-serviceaccount
-    namespace: ingress-nginx
 
 ---
 
