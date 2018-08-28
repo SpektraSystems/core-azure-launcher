@@ -47,7 +47,7 @@ function create_cert
   openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
   echo "Created server.crt (self-signed)"
 
-  kubectl create secret cjoc-tls --cert=server.crt --key=server.key
+  kubectl create secret tls cjoc-tls --cert=server.crt --key=server.key
 }
 
 
