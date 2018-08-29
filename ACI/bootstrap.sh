@@ -61,10 +61,10 @@ kubectl rollout status sts cjoc
 
 function clean_up
 {
-kubectl delete pods corebootstrap
+ az container delete -n coreBootstrapContainer -g $rgname -y
 }
 
 deploy_ingress
 create_cert
 deploy_cje
-#clean_up
+clean_up
