@@ -113,7 +113,8 @@
         "servicePrincipalClientId": "[parameters('servicePrincipalClientId')]",
         "servicePrincipalClientSecret": "[parameters('servicePrincipalClientSecret')]",
         "kubernetesVersion": "[parameters('kubernetesVersion')]",
-        "tenantid": "[subscription().tenantId]"
+        "tenantid": "[subscription().tenantId]",
+        "cjocdnsprefix": "cjoc"
     },
     "resources": [{
             "type": "Microsoft.ContainerService/managedClusters",
@@ -161,6 +162,9 @@
             "type": "Microsoft.ContainerInstance/containerGroups",
             "apiVersion": "2018-04-01",
             "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ContainerService/managedClusters', variables('aksClusterName'))]"
+            ],
             "properties": {
               "containers": [
                 {
@@ -190,7 +194,7 @@
                         },
                         {
                           "name": "cjedns",
-                          "value": "cjoc"
+                          "value": "[variables('cjocdnsprefix')]"
                         }
                       ],
                     "resources": {
