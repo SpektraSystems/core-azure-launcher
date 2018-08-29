@@ -4,25 +4,13 @@
 
 
 #!/bin/sh
-## Argument 1 will be  SPN App ID
-## Argument 2 will be password for SPN App 
-## Argument 3 will be Tenant ID
-## Argument 4 will be resource group name
-## Argument 5 will be AKS Cluster Name
-## Argument 6 will be CJOC DNS Initial
-
-spnappid="$1"
-spnapppassword="$2"
-spntenantid="$3"
-rgname="$4"
-k8name="$5"
-cjedns="$6"
+cjedns="cjoc"
 #rbacenabled="$7"
 
 function deploy_ingress
 {
-    az login --service-principal -u $spnappid -p $spnapppassword --tenant $spntenantid
-    az aks get-credentials -g $rgname -n $k8name
+    echo $cfg | base64 --decode > config.txt
+    export KUBECONFIG=config.txt
     kubectl apply -f https://raw.githubusercontent.com/SpektraSystems/core-azure-launcher/master/manifest/ingress-mandatory.yaml
     kubectl apply -f https://raw.githubusercontent.com/SpektraSystems/core-azure-launcher/master/manifest/ingress-cloud-generic.yaml
  while [[ "$(kubectl get svc ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')" = '' ]]; do sleep 3; done
@@ -59,12 +47,8 @@ kubectl apply -f cje.yml
 kubectl rollout status sts cjoc
 }
 
-function clean_up
-{
-kubectl delete pods corebootstrap
-}
 
 deploy_ingress
 create_cert
 deploy_cje
-#clean_up
+
