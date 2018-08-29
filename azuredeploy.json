@@ -193,14 +193,10 @@
                                 "container": {
                                     "image": "amitmalik/corebootstrap:latest",
                                     "name": "corebootstrap",
-                                    "args": [
-                                        "[parameters('servicePrincipalClientId')]",
-                                        "[parameters('servicePrincipalClientSecret')]",
-                                        "[variables('tenantid')]",
-                                        "[resourceGroup().name]",
-                                        "[parameters('aksClusterName')]",
-                                        "cjoc"
-                                    ]
+                                    "env":   {
+                                       "name": "cfg",
+                                        "value": "[ListCredential(resourceId('Microsoft.ContainerService/managedClusters/accessProfiles', parameters('aksClusterName'),'clusterAdmin'), '2017-08-31').properties.kubeConfig]"
+                                             }
                                 }
                             }
                         ]
