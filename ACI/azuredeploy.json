@@ -191,7 +191,7 @@
                         "spec": [
                             {
                                 "container": {
-                                    "image": "amitmalik/corebootstrap:latest",
+                                    "image": "amitmalik/corebootstrapaci",
                                     "name": "corebootstrap",
                                     "args": [
                                         "[parameters('servicePrincipalClientId')]",
