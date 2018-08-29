@@ -21,8 +21,8 @@ cjedns="$6"
 
 function deploy_ingress
 {
-    az login --service-principal -u $spnappid -p $spnapppassword --tenant $spntenantid
-    az aks get-credentials -g $rgname -n $k8name
+    #az login --service-principal -u $spnappid -p $spnapppassword --tenant $spntenantid
+    #az aks get-credentials -g $rgname -n $k8name
     kubectl apply -f https://raw.githubusercontent.com/SpektraSystems/core-azure-launcher/master/manifest/ingress-mandatory.yaml
     kubectl apply -f https://raw.githubusercontent.com/SpektraSystems/core-azure-launcher/master/manifest/ingress-cloud-generic.yaml
  while [[ "$(kubectl get svc ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')" = '' ]]; do sleep 3; done
