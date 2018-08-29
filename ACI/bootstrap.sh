@@ -61,7 +61,7 @@ kubectl rollout status sts cjoc
 
 function clean_up
 {
- az container delete -n coreBootstrapContainer -g $rgname -y
+az container delete -n coreBootstrapContainer -g $rgname -y
 }
 
 deploy_ingress
