@@ -67,4 +67,4 @@ kubectl delete pods corebootstrap
 deploy_ingress
 create_cert
 deploy_cje
-clean_up
+#clean_up
