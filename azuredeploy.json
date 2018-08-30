@@ -86,14 +86,14 @@
                 }
             }, 
             "enableAksRBAC": {
-                "defaultValue": "fale",
+                "defaultValue": "false",
                 "allowedValues": [
                     "true",
                     "false"
                 ],
                 "type": "String",
                 "metadata": {
-                    "description": "The version of Kubernetes."
+                    "description": "Kubernetes Role Based Access Control"
                 }
             },
              "kubernetesVersion": {
