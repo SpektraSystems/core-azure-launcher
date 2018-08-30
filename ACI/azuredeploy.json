@@ -85,6 +85,17 @@
                 "description": "The Service Principal Client Secret."
             }
         }, 
+         "enableAksRBAC": {
+                "defaultValue": "false",
+                "allowedValues": [
+                    "true",
+                    "false"
+                ],
+                "type": "String",
+                "metadata": {
+                    "description": "Enable or Disable AKS Role based Access Control"
+                }
+            },
         "kubernetesVersion": {
             "defaultValue": "1.11.2",
             "allowedValues": [
