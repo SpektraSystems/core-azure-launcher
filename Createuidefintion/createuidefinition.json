@@ -16,10 +16,35 @@
         "bladeTitle": "Azure Kubernetes Service Settings",
         "elements": [
           {
+            "name": "Clustertype",
+            "type": "Microsoft.Common.OptionsGroup",
+            "label": "Cluster Type",
+            "toolTip":"Choose if you want to deploy CloudBees core in a new AKS Cluster or an existing deployed AKS Cluster ",
+            "defaultValue": "New",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "Create New",
+                  "value": "new"
+                },
+                {
+                  "label": "Use Existing",
+                  "value": "existing"
+                }
+              ],
+              "options": {
+                "hideExisting": false,
+                "hideNone": false
+            },
+              "required": true
+            },
+            "visible": true
+          },
+          {
             "name": "aksClusterName",
             "type": "Microsoft.Common.TextBox",
             "label": "Cluster Name",
-            "toolTip":" ",
+            "toolTip":"The name of the Azure Kubernetes Service cluster",
             "defaultValue": "",
             "constraints": {
               "required": true,
@@ -32,31 +57,33 @@
             "name": "ClusterDNSPrefix",
             "type": "Microsoft.Common.TextBox",
             "label": "Cluster DNS Prefix",
-            "toolTip":" ",
+            "toolTip":"DNS prefix to use with hosted Kubernetes API server FQDN. ",
             "defaultValue": "",
             "constraints": {
               "required": true,
               "regex": "^[a-z0-9A-Z-]{3,79}$",
               "validationMessage": "The dns must be between 3 and 79 characters long and contain letters, numbers and hyphens only."
             },
-            "visible": true
+            "visible": "[equals(steps('kubernetesConfig').Clustertype,'new')]"
           },
           {
             "name": "NodeCount",
             "type": "Microsoft.Common.TextBox",
             "label": "Node Count",
-            "toolTip":" ",
+            "toolTip":"The number of agent nodes for the cluster.",
             "defaultValue": "3",
             "constraints": {
+              "minValue": 1,
+              "maxValue": 50,
               "required": true
             },
-            "visible": true
+            "visible": "[equals(steps('kubernetesConfig').Clustertype,'new')]"
           },
           {
             "name": "EnableRBAC",
-            "type": "Microsoft.Common.DropDown",
+            "type": "Microsoft.Common.OptionsGroup",
             "label": "Enable RBAC",
-            "toolTip":" ",
+            "toolTip":"Enables kubernetes role-based access control which provides fine-grained control over cluster resources.",
             "defaultValue": "",
             "constraints": {
               "allowedValues": [
@@ -71,13 +98,13 @@
            ],
               "required": true
             },
-            "visible": true
+            "visible": "[equals(steps('kubernetesConfig').Clustertype,'new')]"
           },
           {
             "name": "KubernetesVersion",
             "type": "Microsoft.Common.DropDown",
             "label": "Kubernetes Version",
-            "toolTip":" ",
+            "toolTip":"The version of Kubernetes that should be used for this cluster.You will be able to upgrade this version after creating cluster. ",
             "defaultValue": "1.11.2",
             "constraints": {
               "allowedValues": [
@@ -92,17 +119,37 @@
                 {
                   "label": "1.9.9",
                   "value": "1.9.9"
+                },
+                {
+                  "label": "1.8.14",
+                  "value": "1.8.14"
+                },
+                {
+                  "label": "1.8.11",
+                  "value": "1.8.11"
+                },
+                {
+                  "label": "1.8.10",
+                  "value": "1.8.10"
+                },
+                {
+                  "label": "1.7.16",
+                  "value": "1.7.16"
+                },
+                {
+                  "label": "1.7.15",
+                  "value": "1.7.15"
                 }
               ],
               "required": true
             },
-            "visible": true
+            "visible": "[equals(steps('kubernetesConfig').Clustertype,'new')]"
           },
           {
             "name": "NodeVirtualMachineSize",
             "type": "Microsoft.Compute.SizeSelector",
             "label": "Node Virtual Machine Size",
-            "toolTip": "The size of the agent VMs",
+            "toolTip": "The size of the virtual machines that will form the nodes in the cluster.This cannot be changed after creating the cluster.",
             "recommendedSizes": [
                 "Standard_DS2_v2"
             ],
@@ -151,33 +198,34 @@
               ]
             },
             "osPlatform": "Linux",
-            "count": 3
+            "count": 3,
+            "visible": "[equals(steps('kubernetesConfig').Clustertype,'new')]"
           },
           {
             "name": "ServicePrincipalAppID",
             "type": "Microsoft.Common.TextBox",
             "label": "Service Principal App ID",
-            "toolTip":" ",
-            "defaultValue": "",
+            "toolTip":"The client ID of an service principal. ",
+            "defaultValue": " ",
             "constraints": {
               "required": true,
               "regex": "^[a-z0-9A-Z-]{3,79}$",
               "validationMessage": "The ID must be between 3 and 79 characters long and contain letters, numbers and hyphens only."
             },
-            "visible": true
+            "visible": "[equals(steps('kubernetesConfig').Clustertype,'new')]"
           },
           {
             "name": "ServicePrincipalSecret",
             "type": "Microsoft.Common.TextBox",
             "label": "Service Principal Secret",
-            "toolTip":" ",
+            "toolTip":"The client secret of an service principal. ",
             "defaultValue": "",
             "constraints": {
               "required": true,
               "regex": "^[a-z0-9A-Z-]{3,79}$",
               "validationMessage": "The secret must be between 3 and 79 characters long and contain letters, numbers and hyphens only"
             },
-            "visible": true
+            "visible": "[equals(steps('kubernetesConfig').Clustertype,'new')]"
           }
         ]
       }
@@ -190,7 +238,8 @@
         "KubernetesVersion": "[steps('kubernetesConfig').KubernetesVersion]",
         "NodeVirtualMachineSize": "[steps('kubernetesConfig').NodeVirtualMachineSize]",
         "ServicePrincipalAppID": "[steps('kubernetesConfig').ServicePrincipalAppID]",
-        "ServicePrincipalSecret": "[steps('kubernetesConfig').ServicePrincipalSecret]"
+        "ServicePrincipalSecret": "[steps('kubernetesConfig').ServicePrincipalSecret]",
+        "location": "[location()]"
          }
   }
 }
