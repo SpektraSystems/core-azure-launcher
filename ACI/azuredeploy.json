@@ -146,7 +146,8 @@
         "servicePrincipalClientId": "[parameters('servicePrincipalClientId')]",
         "servicePrincipalClientSecret": "[parameters('servicePrincipalClientSecret')]",
         "kubernetesVersion": "[parameters('kubernetesVersion')]",
-        "tenantid": "[subscription().tenantId]"
+        "tenantid": "[subscription().tenantId]",
+        "cjocdnsprefix": "cjoc"
     },
     "resources": [{
             "type": "Microsoft.ContainerService/managedClusters",
