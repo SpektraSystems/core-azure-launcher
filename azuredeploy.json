@@ -21,6 +21,7 @@
         },
         "dnsPrefix": {
             "type": "String",
+            "defaultValue": "cbcore",
             "metadata": {
                 "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
             }
