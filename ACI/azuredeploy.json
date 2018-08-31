@@ -21,6 +21,7 @@
         },
         "dnsPrefix": {
             "type": "String",
+            "defaultValue": "cbcore",
             "metadata": {
                 "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
             }
@@ -190,7 +191,7 @@
             }
         },
         {
-            "name": "coreBootstrapContainer",
+            "name": "coreBootstrapContainerexistingaks",
             "type": "Microsoft.ContainerInstance/containerGroups",
             "condition": "[equals(parameters('clusterType'),'existing')]",
             "apiVersion": "2018-04-01",
