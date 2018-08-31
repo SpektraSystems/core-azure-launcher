@@ -2,6 +2,17 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "clusterType": {
+            "type": "String",
+            "defaultValue": "new",
+            "allowedValues": [
+                "new",
+                "existing"
+            ],
+            "metadata": {
+                "description": "Choose Wheather you want to deploy on an existing AKS Cluster or on provision a new cluster."
+            }
+        },
         "aksClusterName": {
             "type": "String",
             "metadata": {
@@ -85,18 +96,27 @@
                 "description": "The Service Principal Client Secret."
             }
         }, 
-         "enableAksRBAC": {
-                "defaultValue": "false",
-                "allowedValues": [
-                    "true",
-                    "false"
-                ],
-                "type": "String",
-                "metadata": {
-                    "description": "Enable or Disable AKS Role based Access Control"
-                }
-            },
-        "kubernetesVersion": {
+        
+        "location": {
+            "defaultValue": "n/a",
+            "type": "string",
+            "metadata": {
+                "description": "resources location."
+            }
+        }, 
+        "enableAksRBAC": {
+            "defaultValue": "false",
+            "type": "bool",
+            "allowedValues": [
+                "true",
+                "false"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Kubernetes Role Based Access Control"
+            }
+        },
+         "kubernetesVersion": {
             "defaultValue": "1.11.2",
             "allowedValues": [
                 "1.11.2",
@@ -108,6 +128,7 @@
                 "description": "The version of Kubernetes."
             }
         }
+        
     },
     "variables": {
         "linuxAdminUsername": "azureuser",
@@ -124,14 +145,14 @@
         "servicePrincipalClientId": "[parameters('servicePrincipalClientId')]",
         "servicePrincipalClientSecret": "[parameters('servicePrincipalClientSecret')]",
         "kubernetesVersion": "[parameters('kubernetesVersion')]",
-        "tenantid": "[subscription().tenantId]",
-        "cjocdnsprefix": "cjoc"
+        "tenantid": "[subscription().tenantId]"
     },
     "resources": [{
             "type": "Microsoft.ContainerService/managedClusters",
             "name": "[variables('aksClusterName')]",
+            "condition": "[equals(parameters('clusterType'),'new')]",
             "apiVersion": "2018-03-31",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('location')]",
             "properties": {
                 "kubernetesVersion": "[variables('kubernetesVersion')]",
                 "enableRBAC": "[variables('enableRBAC')]",
@@ -171,6 +192,37 @@
         {
             "name": "coreBootstrapContainer",
             "type": "Microsoft.ContainerInstance/containerGroups",
+            "condition": "[equals(parameters('clusterType'),'existing')]",
+            "apiVersion": "2018-04-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+              "containers": [
+                {
+                  "name": "corebootstrap",
+                  "properties": {
+                    "image": "amitmalik/corebootstrap:latest",
+                    "environmentVariables": [
+                        {
+                          "name": "cfg",
+                          "value": "[ListCredential(resourceId('Microsoft.ContainerService/managedClusters/accessProfiles', parameters('aksClusterName'),'clusterAdmin'), '2017-08-31').properties.kubeConfig]"
+                        }
+                      ],
+                    "resources": {
+                      "requests": {
+                        "cpu": 0.5,
+                        "memoryInGb": 0.5
+                        }
+                    }  
+                }
+            }
+              ],
+              "osType": "Linux"
+            }
+          },
+          {
+            "name": "coreBootstrapContainer",
+            "type": "Microsoft.ContainerInstance/containerGroups",
+            "condition": "[equals(parameters('clusterType'),'new')]",
             "apiVersion": "2018-04-01",
             "location": "[resourceGroup().location]",
             "dependsOn": [
@@ -220,7 +272,5 @@
               "osType": "Linux"
             }
           }
-
-
     ]
 }
