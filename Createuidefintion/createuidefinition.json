@@ -231,14 +231,15 @@
       }
     ],
     "outputs": {
+        "clusterType": "[steps('kubernetesConfig').Clustertype]",
         "aksClusterName": "[steps('kubernetesConfig').aksClusterName]",
-        "ClusterDNSPrefix":"[steps('kubernetesConfig').ClusterDNSPrefix]",
-        "NodeCount":"[steps('kubernetesConfig').NodeCount]",
-        "EnableRBAC":"[steps('kubernetesConfig').EnableRBAC]",
-        "KubernetesVersion": "[steps('kubernetesConfig').KubernetesVersion]",
-        "NodeVirtualMachineSize": "[steps('kubernetesConfig').NodeVirtualMachineSize]",
-        "ServicePrincipalAppID": "[steps('kubernetesConfig').ServicePrincipalAppID]",
-        "ServicePrincipalSecret": "[steps('kubernetesConfig').ServicePrincipalSecret]",
+        "dnsPrefix":"[steps('kubernetesConfig').ClusterDNSPrefix]",
+        "aksAgentCount":"[steps('kubernetesConfig').NodeCount]",
+        "enableAksRBAC":"[steps('kubernetesConfig').EnableRBAC]",
+        "kubernetesVersion": "[steps('kubernetesConfig').KubernetesVersion]",
+        "agentVMSize": "[steps('kubernetesConfig').NodeVirtualMachineSize]",
+        "servicePrincipalClientId": "[steps('kubernetesConfig').ServicePrincipalAppID]",
+        "servicePrincipalClientSecret": "[steps('kubernetesConfig').ServicePrincipalSecret]",
         "location": "[location()]"
          }
   }
