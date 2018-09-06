@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "clusterType": {
-            "type": "String",
+            "type": "string",
             "defaultValue": "new",
             "allowedValues": [
                 "new",
@@ -14,13 +14,13 @@
             }
         },
         "aksClusterName": {
-            "type": "String",
+            "type": "string",
             "metadata": {
                 "description": "The name of the Managed Cluster resource."
             }
         },
         "dnsPrefix": {
-            "type": "String",
+            "type": "string",
             "defaultValue": "cbcore",
             "metadata": {
                 "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
@@ -30,7 +30,7 @@
             "defaultValue": 3,
             "minValue": 1,
             "maxValue": 50,
-            "type": "Int",
+            "type": "int",
             "metadata": {
                 "description": "The number of nodes for the cluster."
             }
@@ -78,21 +78,21 @@
                 "Standard_B4ms",
                 "Standard_B8ms"
             ],
-            "type": "String",
+            "type": "string",
             "metadata": {
                 "description": "The size of the Virtual Machine."
             }
         },
         "servicePrincipalClientId": {
             "defaultValue": "n/a",
-            "type": "SecureString",
+            "type": "secureString",
             "metadata": {
                 "description": "Client ID (used by cloudprovider)"
             }
         },
         "servicePrincipalClientSecret": {
             "defaultValue": "n/a",
-            "type": "SecureString",
+            "type": "securestring",
             "metadata": {
                 "description": "The Service Principal Client Secret."
             }
@@ -112,7 +112,6 @@
                 "true",
                 "false"
             ],
-            "type": "String",
             "metadata": {
                 "description": "Kubernetes Role Based Access Control"
             }
@@ -124,7 +123,7 @@
                 "1.10.6",
                 "1.9.9"
             ],
-            "type": "String",
+            "type": "string",
             "metadata": {
                 "description": "The version of Kubernetes."
             }
