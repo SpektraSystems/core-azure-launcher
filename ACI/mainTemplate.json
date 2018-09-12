@@ -93,6 +93,20 @@
             "metadata": {
                 "description": "The version of Kubernetes."
             }
+        },
+        "_artifactsLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+            },
+            "defaultValue": "[deployment().properties.templateLink.uri]"
+        },
+        "_artifactsLocationSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+            },
+            "defaultValue": ""
         }
         
     },
@@ -168,69 +182,51 @@
             }
         },
         {
-            "name": "coreBootstrapContainerExistingAKS",
+            "name": "existingakscoredeployment",
+            "type": "Microsoft.Resources/deployments",
             "condition": "[equals(parameters('clusterType'),'existing')]",
-            "type": "Microsoft.ContainerInstance/containerGroups",
-            "apiVersion": "2018-04-01",
-            "location": "[parameters('location')]",
+            "apiVersion": "2015-01-01",
             "properties": {
-              "containers": [
-                {
-                  "name": "cloudbeescorebootstrapexistingaks",
-                  "properties": {
-                    "image": "amitmalik/corebootstrap:latest",
-                    "environmentVariables": [
-                        {
-                          "name": "cfg",
-                          "value": "[ListCredential(resourceId(parameters('existingAksClusterRGName'),'Microsoft.ContainerService/managedClusters/accessProfiles', parameters('aksClusterName'),'clusterAdmin'), '2017-08-31').properties.kubeConfig]"
-                        }
-                      ],
-                    "resources": {
-                      "requests": {
-                        "cpu": 0.5,
-                        "memoryInGb": 0.5
-                        }
-                    }
+              "mode": "Incremental",
+              "templateLink": {
+                "uri": "[concat(parameters('_artifactsLocation'),'/','nestedtemplates','/','existingakscoredeployment.json', parameters('_artifactsLocationSasToken'))]",
+                "contentVersion": "1.0.0.0"
+              },
+              "parameters": {
+                "location": {
+                  "value": "[parameters('location')]"
+                },
+                "aksClusterName": {
+                  "value": "[variables('aksClusterName')]"
+                },
+                "existingAksClusterRGName": {
+                  "value": "[parameters('existingAksClusterRGName')]"
                 }
-
-            }
-              ],
-              "osType": "Linux",
-              "restartPolicy": "OnFailure"
+              }
             }
           },
           {
-            "name": "coreBootstrapContainerNewAKS",
+            "name": "newakscoredeployment",
+            "type": "Microsoft.Resources/deployments",
             "condition": "[equals(parameters('clusterType'),'new')]",
-            "type": "Microsoft.ContainerInstance/containerGroups",
-            "apiVersion": "2018-04-01",
-            "location": "[parameters('location')]",
+            "apiVersion": "2015-01-01",
             "dependsOn": [
                 "[resourceId('Microsoft.ContainerService/managedClusters', variables('aksClusterName'))]"
             ],
             "properties": {
-              "containers": [
-                {
-                  "name": "cloudbeescorebootstrapnewaks",
-                  "properties": {
-                    "image": "amitmalik/corebootstrap:latest",
-                    "environmentVariables":  [
-                        {
-                          "name": "cfg",
-                          "value": "[ListCredential(resourceId('Microsoft.ContainerService/managedClusters/accessProfiles', parameters('aksClusterName'),'clusterAdmin'), '2017-08-31').properties.kubeConfig]"
-                        }
-                      ],
-                    "resources": {
-                      "requests": {
-                        "cpu": 0.5,
-                        "memoryInGb": 0.5
-                        }
-                    }
+              "mode": "Incremental",
+              "templateLink": {
+                "uri": "[concat(parameters('_artifactsLocation'),'/','nestedtemplates','/','newakscoredeployment.json', parameters('_artifactsLocationSasToken'))]",
+                "contentVersion": "1.0.0.0"
+              },
+              "parameters": {
+                "location": {
+                  "value": "[parameters('location')]"
+                },
+                "aksClusterName": {
+                  "value": "[variables('aksClusterName')]"
                 }
-            }
-              ],
-              "osType": "Linux",
-              "restartPolicy": "OnFailure"
+              }
             }
           }
     ]
