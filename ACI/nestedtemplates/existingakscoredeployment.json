@@ -1,0 +1,61 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "aksClusterName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Managed Cluster resource."
+            }
+        },      
+        "existingAksClusterRGName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of existing AKS Cluster RG."
+            }
+        },      
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "resources location."
+            }
+        }
+
+    },
+    "variables": {
+        "aksClusterName": "[parameters('aksClusterName')]"
+    },
+    "resources": [
+        {
+            "name": "coreBootstrapContainerExistingAKS",
+            "type": "Microsoft.ContainerInstance/containerGroups",
+            "apiVersion": "2018-04-01",
+            "location": "[parameters('location')]",
+            "properties": {
+              "containers": [
+                {
+                  "name": "cloudbeescorebootstrapexistingaks",
+                  "properties": {
+                    "image": "amitmalik/corebootstrap:latest",
+                    "environmentVariables": [
+                        {
+                          "name": "cfg",
+                          "value": "[ListCredential(resourceId(parameters('existingAksClusterRGName'),'Microsoft.ContainerService/managedClusters/accessProfiles', parameters('aksClusterName'),'clusterAdmin'), '2017-08-31').properties.kubeConfig]"
+                        }
+                      ],
+                    "resources": {
+                      "requests": {
+                        "cpu": 0.5,
+                        "memoryInGb": 0.5
+                        }
+                    }
+                }
+
+            }
+              ],
+              "osType": "Linux",
+              "restartPolicy": "OnFailure"
+            }
+          }
+    ]
+}
