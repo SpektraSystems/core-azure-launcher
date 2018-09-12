@@ -44,10 +44,11 @@ wget https://raw.githubusercontent.com/SpektraSystems/core-azure-launcher/master
 sed -i -e "s#cje.example.com#$CJEHOSTNAME#" "cje.yml"
 kubectl apply -f cje.yml
 kubectl rollout status sts cjoc
+exit 0
 }
 
 
 deploy_ingress
 create_cert
 deploy_cje
-exit 0
+
