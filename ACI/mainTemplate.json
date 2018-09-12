@@ -1,0 +1,237 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "clusterType": {
+            "type": "string",
+            "defaultValue": "new",
+            "allowedValues": [
+                "new",
+                "existing"
+            ],
+            "metadata": {
+                "description": "Choose whether you want to deploy on an existing AKS Cluster or on provision a new cluster."
+            }
+        },
+        "aksClusterName": {
+            "type": "string",
+            "defaultValue": "myakscluster",
+            "metadata": {
+                "description": "The name of the Managed Cluster resource."
+            }
+        },      
+        "existingAksClusterRGName": {
+            "type": "string",
+            "defaultValue": "myexistingrg",
+            "metadata": {
+                "description": "The name of existing AKS Cluster RG."
+            }
+        },
+        "dnsPrefix": {
+            "type": "string",
+            "defaultValue": "cbcore",
+            "metadata": {
+                "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
+            }
+        },
+        "aksAgentCount": {
+            "defaultValue": 3,
+            "minValue": 1,
+            "maxValue": 50,
+            "type": "int",
+            "metadata": {
+                "description": "The number of nodes for the cluster."
+            }
+        },
+        "agentVMSize": {
+            "defaultValue": "Standard_DS2_v2",
+            "type": "string",
+            "metadata": {
+                "description": "The size of the Agent Virtual Machine."
+            }
+        },
+        "servicePrincipalClientId": {
+            "defaultValue": "n/a",
+            "type": "securestring",
+            "metadata": {
+                "description": "Client ID (used by cloudprovider)"
+            }
+        },
+        "servicePrincipalClientSecret": {
+            "defaultValue": "n/a",
+            "type": "securestring",
+            "metadata": {
+                "description": "The Service Principal Client Secret."
+            }
+        },        
+        "location": {
+            "defaultValue": "westus2",
+            "type": "string",
+            "metadata": {
+                "description": "resources location."
+            }
+        }, 
+        "enableAksRBAC": {
+            "defaultValue": false,
+            "type": "bool",
+            "allowedValues": [
+                true,
+                false
+            ],
+            "metadata": {
+                "description": "Kubernetes Role Based Access Control"
+            }
+        },
+         "kubernetesVersion": {
+            "defaultValue": "1.11.2",
+            "allowedValues": [
+                "1.11.2",
+                "1.10.6",
+                "1.9.9"
+            ],
+            "type": "string",
+            "metadata": {
+                "description": "The version of Kubernetes."
+            }
+        }
+        
+    },
+    "variables": {
+        "linuxAdminUsername": "azureuser",
+        "sshRSAPublicKey": "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAnU4hz3XXS1jzV4m7oPmAWFPmLkWzNIshUOyThQUPmjy7OTzXNcMDLFo7UDF52iXCFc5TN0S8+GjsQjyWv4HPH2efm/4NzZ5N8EUunjumTPMpn6skobkorRJXZwmoc/so1K+kA3R9U3g9s0kvBmlyFTDn/CX0Zk9VJalLcsRe3uPL7u4z1qF+UQMG72h10zz3ZZ+zyAaZpv0hkPnbiq/VIn+OZDSG4jzQtOKF5H0lsCoHMaRtfbD1udz9nL/L2m2vdg41QEw212429is0h31c24VFfTTKt76pwkgURNXUzc2/QENmYt+OeveXaAgAD3cvG39AWRBAzxPpjsL8325Cuw== amit-sshkey-12142017",
+        "enableHttpApplicationRouting": false,
+        "enableRBAC": "[parameters('enableAksRBAC')]",
+        "networkPlugin": "kubenet",
+        "osType": "Linux",
+        "osDiskSizeGB": 50,
+        "aksClusterName": "[parameters('aksClusterName')]",
+        "agentVMSize": "[parameters('agentVMSize')]",
+        "dnsPrefix": "[parameters('dnsPrefix')]",
+        "servicePrincipalClientId": "[parameters('servicePrincipalClientId')]",
+        "servicePrincipalClientSecret": "[parameters('servicePrincipalClientSecret')]",
+        "kubernetesVersion": "[parameters('kubernetesVersion')]",
+        "tenantid": "[subscription().tenantId]"
+    },
+    "resources": [{
+        "apiVersion": "2018-02-01",
+        "name": "pid-334853d2-1e00-4654-a187-c44268c847af",
+        "type": "Microsoft.Resources/deployments",
+        "properties": {
+            "mode": "Incremental",
+            "template": {
+                "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                "contentVersion": "1.0.0.0",
+                "resources": []
+            }
+        }
+    },  
+        {
+            "type": "Microsoft.ContainerService/managedClusters",
+            "name": "[variables('aksClusterName')]",
+            "condition": "[equals(parameters('clusterType'),'new')]",
+            "apiVersion": "2018-03-31",
+            "location": "[parameters('location')]",
+            "properties": {
+                "kubernetesVersion": "[variables('kubernetesVersion')]",
+                "enableRBAC": "[variables('enableRBAC')]",
+                "dnsPrefix": "[variables('dnsPrefix')]",
+                "addonProfiles": {
+                "httpApplicationRouting": {
+                    "enabled": "[variables('enableHttpApplicationRouting')]"
+                }
+            },
+                "agentPoolProfiles": [{
+                    "name": "agentpool",
+                    "osDiskSizeGB": "[variables('osDiskSizeGB')]",
+                    "count": "[parameters('aksAgentCount')]",
+                    "vmSize": "[variables('agentVMSize')]",
+                    "osType": "[variables('osType')]",
+                    "storageProfile": "ManagedDisks"
+                }],
+                "linuxProfile": {
+                    "adminUsername": "[variables('linuxAdminUsername')]",
+                    "ssh": {
+                        "publicKeys": [
+                            {
+                                "keyData": "[variables('sshRSAPublicKey')]"
+                            }
+                        ]
+                    }
+                },
+                "servicePrincipalProfile": {
+                    "ClientId": "[parameters('servicePrincipalClientId')]",
+                    "Secret": "[parameters('servicePrincipalClientSecret')]"
+                },
+                "networkProfile": {
+                    "networkPlugin": "[variables('networkPlugin')]"
+                }
+            }
+        },
+        {
+            "name": "coreBootstrapContainerExistingAKS",
+            "condition": "[equals(parameters('clusterType'),'existing')]",
+            "type": "Microsoft.ContainerInstance/containerGroups",
+            "apiVersion": "2018-04-01",
+            "location": "[parameters('location')]",
+            "properties": {
+              "containers": [
+                {
+                  "name": "cloudbeescorebootstrapexistingaks",
+                  "properties": {
+                    "image": "amitmalik/corebootstrap:latest",
+                    "environmentVariables": [
+                        {
+                          "name": "cfg",
+                          "value": "[ListCredential(resourceId(parameters('existingAksClusterRGName'),'Microsoft.ContainerService/managedClusters/accessProfiles', parameters('aksClusterName'),'clusterAdmin'), '2017-08-31').properties.kubeConfig]"
+                        }
+                      ],
+                    "resources": {
+                      "requests": {
+                        "cpu": 0.5,
+                        "memoryInGb": 0.5
+                        }
+                    }
+                }
+
+            }
+              ],
+              "osType": "Linux",
+              "restartPolicy": "OnFailure"
+            }
+          },
+          {
+            "name": "coreBootstrapContainerNewAKS",
+            "condition": "[equals(parameters('clusterType'),'new')]",
+            "type": "Microsoft.ContainerInstance/containerGroups",
+            "apiVersion": "2018-04-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ContainerService/managedClusters', variables('aksClusterName'))]"
+            ],
+            "properties": {
+              "containers": [
+                {
+                  "name": "cloudbeescorebootstrapnewaks",
+                  "properties": {
+                    "image": "amitmalik/corebootstrap:latest",
+                    "environmentVariables":  [
+                        {
+                          "name": "cfg",
+                          "value": "[ListCredential(resourceId('Microsoft.ContainerService/managedClusters/accessProfiles', parameters('aksClusterName'),'clusterAdmin'), '2017-08-31').properties.kubeConfig]"
+                        }
+                      ],
+                    "resources": {
+                      "requests": {
+                        "cpu": 0.5,
+                        "memoryInGb": 0.5
+                        }
+                    }
+                }
+            }
+              ],
+              "osType": "Linux",
+              "restartPolicy": "OnFailure"
+            }
+          }
+    ]
+}
