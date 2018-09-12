@@ -50,3 +50,4 @@ kubectl rollout status sts cjoc
 deploy_ingress
 create_cert
 deploy_cje
+exit 0
