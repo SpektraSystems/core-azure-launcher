@@ -5,7 +5,6 @@
 
 #!/bin/sh
 cjedns="cjoc"
-#rbacenabled="$7"
 
 function deploy_ingress
 {
