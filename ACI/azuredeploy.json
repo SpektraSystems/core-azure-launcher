@@ -110,7 +110,7 @@
         "servicePrincipalClientId": "[parameters('servicePrincipalClientId')]",
         "servicePrincipalClientSecret": "[parameters('servicePrincipalClientSecret')]",
         "kubernetesVersion": "[parameters('kubernetesVersion')]",
-        "tenantid": "[subscription().tenantId]",
+        "tenantid": "[subscription().tenantId]"
     },
     "resources": [{
         "apiVersion": "2018-02-01",
@@ -176,7 +176,7 @@
             "properties": {
               "containers": [
                 {
-                  "name": "cloudBeesCoreBootstrap",
+                  "name": "cloudbeescorebootstrapexistingaks",
                   "properties": {
                     "image": "amitmalik/corebootstrap:latest",
                     "environmentVariables": [
@@ -190,11 +190,13 @@
                         "cpu": 0.5,
                         "memoryInGb": 0.5
                         }
-                    }  
+                    }
                 }
+
             }
               ],
-              "osType": "Linux"
+              "osType": "Linux",
+              "restartPolicy": "OnFailure"
             }
           },
           {
@@ -209,7 +211,7 @@
             "properties": {
               "containers": [
                 {
-                  "name": "cloudBeesCoreBootstrapNewAKS",
+                  "name": "cloudbeescorebootstrapnewaks",
                   "properties": {
                     "image": "amitmalik/corebootstrap:latest",
                     "environmentVariables":  [
@@ -223,11 +225,12 @@
                         "cpu": 0.5,
                         "memoryInGb": 0.5
                         }
-                    }  
+                    }
                 }
             }
               ],
-              "osType": "Linux"
+              "osType": "Linux",
+              "restartPolicy": "OnFailure"
             }
           }
     ]
