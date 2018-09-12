@@ -96,11 +96,10 @@
         },
         "_artifactsLocation": {
             "type": "string",
-            "defaultvalue": "https://raw.githubusercontent.com/SpektraSystems/core-azure-launcher/master/ACI",
             "metadata": {
                 "description": "The base URI where artifacts required by this template are located including a trailing '/'"
             },
-            "defaultValue": "[deployment().properties.templateLink.uri]"
+            "defaultValue": "https://raw.githubusercontent.com/SpektraSystems/core-azure-launcher/master/ACI"
         },
         "_artifactsLocationSasToken": {
             "type": "securestring",
