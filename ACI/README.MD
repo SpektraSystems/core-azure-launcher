@@ -11,11 +11,15 @@
  
  - Click on Deploy to Azure Button
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FSpektraSystems%2Fcore-azure-launcher%2Fmaster%2FACI%2Fazuredeploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FSpektraSystems%2Fcore-azure-launcher%2Fmaster%2FACI%2FmainTemplate.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
 - Enter all parameter values and CLick Purchase
+## Marketplace Experience
+
+Try below URL for marketplace experience testing. 
+https://portal.azure.com/#blade/Microsoft_Azure_Compute/CreateMultiVmWizardBlade/internal_bladeCallId/anything/internal_bladeCallerParams/{"initialData":{},"providerConfig":{"createUiDefinition":"https%3A%2F%2Fraw.githubusercontent.com%2FSpektraSystems%2Fcore-azure-launcher%2Fmaster%2FACI%2Fcreateuidefinition.json"}}
 
 ## Post Deployment
 Post Sucessful deployment
@@ -35,6 +39,8 @@ kubectl exec cjoc-0 -- cat /var/jenkins_home/secrets/initialAdminPassword
  ```
  kubectl get ingress
  ```
+
+- Delete the corebootstrap ACI Container Instance(it gets terminated after creating cloudBees Core resources. 
 
 You can now use CJOC for further deployment and operations. See Administering CloudBees Jenkins Enterprise for further information.https://go.cloudbees.com/docs/cloudbees-documentation/cje-v2-admin-guide/
 
