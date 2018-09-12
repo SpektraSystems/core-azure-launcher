@@ -3,14 +3,14 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "clusterType": {
-            "type": "String",
+            "type": "string",
             "defaultValue": "new",
             "allowedValues": [
                 "new",
                 "existing"
             ],
             "metadata": {
-                "description": "Choose Wheather you want to deploy on an existing AKS Cluster or on provision a new cluster."
+                "description": "Choose whether you want to deploy on an existing AKS Cluster or on provision a new cluster."
             }
         },
         "aksClusterName": {
@@ -22,13 +22,13 @@
         },      
         "existingAksClusterRGName": {
             "type": "string",
-            "defaultValue": "existingrg",
+            "defaultValue": "myexistingrg",
             "metadata": {
                 "description": "The name of existing AKS Cluster RG."
             }
         },
         "dnsPrefix": {
-            "type": "String",
+            "type": "string",
             "defaultValue": "cbcore",
             "metadata": {
                 "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
@@ -38,28 +38,28 @@
             "defaultValue": 3,
             "minValue": 1,
             "maxValue": 50,
-            "type": "Int",
+            "type": "int",
             "metadata": {
                 "description": "The number of nodes for the cluster."
             }
         },
         "agentVMSize": {
             "defaultValue": "Standard_DS2_v2",
-            "type": "String",
+            "type": "string",
             "metadata": {
                 "description": "The size of the Agent Virtual Machine."
             }
         },
         "servicePrincipalClientId": {
             "defaultValue": "n/a",
-            "type": "SecureString",
+            "type": "securestring",
             "metadata": {
                 "description": "Client ID (used by cloudprovider)"
             }
         },
         "servicePrincipalClientSecret": {
             "defaultValue": "n/a",
-            "type": "SecureString",
+            "type": "securestring",
             "metadata": {
                 "description": "The Service Principal Client Secret."
             }
@@ -78,7 +78,6 @@
                 true,
                 false
             ],
-            "type": "String",
             "metadata": {
                 "description": "Kubernetes Role Based Access Control"
             }
@@ -90,7 +89,7 @@
                 "1.10.6",
                 "1.9.9"
             ],
-            "type": "String",
+            "type": "string",
             "metadata": {
                 "description": "The version of Kubernetes."
             }
@@ -112,7 +111,6 @@
         "servicePrincipalClientSecret": "[parameters('servicePrincipalClientSecret')]",
         "kubernetesVersion": "[parameters('kubernetesVersion')]",
         "tenantid": "[subscription().tenantId]",
-        "cjocdnsprefix": "cjoc"
     },
     "resources": [{
         "apiVersion": "2018-02-01",
@@ -170,15 +168,15 @@
             }
         },
         {
-            "name": "coreBootstrapContainerexistingaks",
-            "type": "Microsoft.ContainerInstance/containerGroups",
+            "name": "coreBootstrapContainerExistingAKS",
             "condition": "[equals(parameters('clusterType'),'existing')]",
+            "type": "Microsoft.ContainerInstance/containerGroups",
             "apiVersion": "2018-04-01",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('location')]",
             "properties": {
               "containers": [
                 {
-                  "name": "cloudbeescorebootstrap",
+                  "name": "cloudBeesCoreBootstrap",
                   "properties": {
                     "image": "amitmalik/corebootstrap:latest",
                     "environmentVariables": [
@@ -201,17 +199,17 @@
           },
           {
             "name": "coreBootstrapContainerNewAKS",
-            "type": "Microsoft.ContainerInstance/containerGroups",
             "condition": "[equals(parameters('clusterType'),'new')]",
+            "type": "Microsoft.ContainerInstance/containerGroups",
             "apiVersion": "2018-04-01",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.ContainerService/managedClusters', variables('aksClusterName'))]"
             ],
             "properties": {
               "containers": [
                 {
-                  "name": "cloudbeescorebootstrap",
+                  "name": "cloudBeesCoreBootstrapNewAKS",
                   "properties": {
                     "image": "amitmalik/corebootstrap:latest",
                     "environmentVariables":  [
