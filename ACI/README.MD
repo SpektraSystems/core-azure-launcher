@@ -19,7 +19,7 @@
 ## Marketplace Experience
 
 Try below URL for marketplace experience testing.  This will just show UI experience for end user, does not do actual deployment
-https://portal.azure.com/#blade/Microsoft_Azure_Compute/CreateMultiVmWizardBlade/internal_bladeCallId/anything/internal_bladeCallerParams/{"initialData":{},"providerConfig":{"createUiDefinition":"https%3A%2F%2Fraw.githubusercontent.com%2FSpektraSystems%2Fcore-azure-launcher%2Fmaster%2FACI%2Fcreateuidefinition.json"}}
+https://portal.azure.com/#blade/Microsoft_Azure_Compute/CreateMultiVmWizardBlade/internal_bladeCallId/anything/internal_bladeCallerParams/{"initialData":{},"providerConfig":{"createUiDefinition":"https%3A%2F%2Fraw.githubusercontent.com%2FSpektraSystems%2Fcore-azure-launcher%2Fmaster%2FACI%2FcreateUiDefinition.json"}}
 
 ## Post Deployment
 Post Sucessful deployment
