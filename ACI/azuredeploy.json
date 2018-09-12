@@ -14,9 +14,17 @@
             }
         },
         "aksClusterName": {
-            "type": "String",
+            "type": "string",
+            "defaultValue": "myakscluster",
             "metadata": {
                 "description": "The name of the Managed Cluster resource."
+            }
+        },      
+        "existingAksClusterRGName": {
+            "type": "string",
+            "defaultValue": "existingrg",
+            "metadata": {
+                "description": "The name of existing AKS Cluster RG."
             }
         },
         "dnsPrefix": {
@@ -37,50 +45,9 @@
         },
         "agentVMSize": {
             "defaultValue": "Standard_DS2_v2",
-            "allowedValues": [
-                "Standard_DS11",
-                "Standard_DS11_v2",
-                "Standard_DS12",
-                "Standard_DS12_v2",
-                "Standard_DS13",
-                "Standard_DS13_v2",
-                "Standard_DS14",
-                "Standard_DS14_v2",
-                "Standard_DS15_v2",
-                "Standard_DS2",
-                "Standard_DS2_v2",
-                "Standard_DS3",
-                "Standard_DS3_v2",
-                "Standard_DS4",
-                "Standard_DS4_v2",
-                "Standard_DS5_v2",
-                "Standard_F16",
-                "Standard_F16s",
-                "Standard_F2",
-                "Standard_F2s",
-                "Standard_F4",
-                "Standard_F4s",
-                "Standard_F8",
-                "Standard_F8s",
-                "Standard_G1",
-                "Standard_G2",
-                "Standard_NC6",
-                "Standard_NC12",
-                "Standard_NC24",
-                "Standard_NC24r",
-                "Standard_NV6",
-                "Standard_NV12",
-                "Standard_NV24",
-                "Standard_B1s",
-                "Standard_B1ms",
-                "Standard_B2s",
-                "Standard_B2ms",
-                "Standard_B4ms",
-                "Standard_B8ms"
-            ],
             "type": "String",
             "metadata": {
-                "description": "The size of the Virtual Machine."
+                "description": "The size of the Agent Virtual Machine."
             }
         },
         "servicePrincipalClientId": {
@@ -96,21 +63,20 @@
             "metadata": {
                 "description": "The Service Principal Client Secret."
             }
-        }, 
-        
+        },        
         "location": {
-            "defaultValue": "n/a",
+            "defaultValue": "westus2",
             "type": "string",
             "metadata": {
                 "description": "resources location."
             }
         }, 
         "enableAksRBAC": {
-            "defaultValue": "false",
+            "defaultValue": false,
             "type": "bool",
             "allowedValues": [
-                "true",
-                "false"
+                true,
+                false
             ],
             "type": "String",
             "metadata": {
@@ -135,9 +101,8 @@
         "linuxAdminUsername": "azureuser",
         "sshRSAPublicKey": "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAnU4hz3XXS1jzV4m7oPmAWFPmLkWzNIshUOyThQUPmjy7OTzXNcMDLFo7UDF52iXCFc5TN0S8+GjsQjyWv4HPH2efm/4NzZ5N8EUunjumTPMpn6skobkorRJXZwmoc/so1K+kA3R9U3g9s0kvBmlyFTDn/CX0Zk9VJalLcsRe3uPL7u4z1qF+UQMG72h10zz3ZZ+zyAaZpv0hkPnbiq/VIn+OZDSG4jzQtOKF5H0lsCoHMaRtfbD1udz9nL/L2m2vdg41QEw212429is0h31c24VFfTTKt76pwkgURNXUzc2/QENmYt+OeveXaAgAD3cvG39AWRBAzxPpjsL8325Cuw== amit-sshkey-12142017",
         "enableHttpApplicationRouting": false,
-        "enableRBAC": false,
+        "enableRBAC": "[parameters('enableAksRBAC')]",
         "networkPlugin": "kubenet",
-        "TFRPlocation": "westcentralus",
         "osType": "Linux",
         "osDiskSizeGB": 50,
         "aksClusterName": "[parameters('aksClusterName')]",
@@ -150,6 +115,19 @@
         "cjocdnsprefix": "cjoc"
     },
     "resources": [{
+        "apiVersion": "2018-02-01",
+        "name": "pid-334853d2-1e00-4654-a187-c44268c847af",
+        "type": "Microsoft.Resources/deployments",
+        "properties": {
+            "mode": "Incremental",
+            "template": {
+                "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                "contentVersion": "1.0.0.0",
+                "resources": []
+            }
+        }
+    },  
+        {
             "type": "Microsoft.ContainerService/managedClusters",
             "name": "[variables('aksClusterName')]",
             "condition": "[equals(parameters('clusterType'),'new')]",
@@ -200,13 +178,13 @@
             "properties": {
               "containers": [
                 {
-                  "name": "corebootstrap",
+                  "name": "cloudbeescorebootstrap",
                   "properties": {
                     "image": "amitmalik/corebootstrap:latest",
                     "environmentVariables": [
                         {
                           "name": "cfg",
-                          "value": "[ListCredential(resourceId('Microsoft.ContainerService/managedClusters/accessProfiles', parameters('aksClusterName'),'clusterAdmin'), '2017-08-31').properties.kubeConfig]"
+                          "value": "[ListCredential(resourceId(parameters('existingAksClusterRGName'),'Microsoft.ContainerService/managedClusters/accessProfiles', parameters('aksClusterName'),'clusterAdmin'), '2017-08-31').properties.kubeConfig]"
                         }
                       ],
                     "resources": {
@@ -222,7 +200,7 @@
             }
           },
           {
-            "name": "coreBootstrapContainer",
+            "name": "coreBootstrapContainerNewAKS",
             "type": "Microsoft.ContainerInstance/containerGroups",
             "condition": "[equals(parameters('clusterType'),'new')]",
             "apiVersion": "2018-04-01",
@@ -233,33 +211,13 @@
             "properties": {
               "containers": [
                 {
-                  "name": "corebootstrap",
+                  "name": "cloudbeescorebootstrap",
                   "properties": {
-                    "image": "amitmalik/corebootstrapaci",
-                    "environmentVariables": [
+                    "image": "amitmalik/corebootstrap:latest",
+                    "environmentVariables":  [
                         {
-                          "name": "spnappid",
-                          "value": "[variables('servicePrincipalClientId')]"
-                        },
-                        {
-                          "name": "spnapppassword",
-                          "value": "[variables('servicePrincipalClientSecret')]"
-                        },
-                        {
-                          "name": "spntenantid",
-                          "value": "[variables('tenantid')]"
-                        },
-                        {
-                          "name": "rgname",
-                          "value": "[resourceGroup().name]"
-                        },
-                        {
-                          "name": "k8name",
-                          "value": "[variables('aksClusterName')]"
-                        },
-                        {
-                          "name": "cjedns",
-                          "value": "[variables('cjocdnsprefix')]"
+                          "name": "cfg",
+                          "value": "[ListCredential(resourceId('Microsoft.ContainerService/managedClusters/accessProfiles', parameters('aksClusterName'),'clusterAdmin'), '2017-08-31').properties.kubeConfig]"
                         }
                       ],
                     "resources": {
